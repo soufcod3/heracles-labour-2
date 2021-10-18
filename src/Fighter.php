@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/Weapon.php';
+require_once __DIR__ . '/Shield.php';
 
 class Fighter
 {
@@ -9,6 +11,9 @@ class Fighter
     private int $strength;
     private int $dexterity;
     private string $image;
+    // Les typages ?Weapon et ?Shield signifient que $weapon et $shield sont soit de type null, soit de type Objet de la classe Weapon ou Shield respectivement 
+    private ?Weapon $weapon = null;
+    private ?Shield $shield = null;
 
     private int $life = self::MAX_LIFE;
     
@@ -22,6 +27,45 @@ class Fighter
         $this->strength = $strength;
         $this->dexterity = $dexterity;
         $this->image = $image;
+    }
+
+    public function getWeapon(): ?Weapon 
+    {
+        return $this->weapon;
+    }
+
+    public function setWeapon(Weapon $weapon): void 
+    {
+        $this->weapon = $weapon;
+    }
+
+    public function getDamage(): int 
+    {
+        if ($this->weapon === null) {
+            return $this->strength;
+        }
+        return $this->strength + $this->weapon->getDamage();
+    }
+
+    public function getShield(): ?Shield
+    {
+        return $this->shield;
+    }
+
+    // Par soucis de précision, $shield est ici obligatoirement de type Objet
+    public function setShield(Shield $shield): void
+    {
+        $this->shield = $shield;
+    }
+
+    public function getDefense(): int 
+    {
+        // Si mon objet n'a pas de shield, sa défense est égale à sa dextérité
+        if ($this->shield === null) {
+            return $this->dexterity;
+        }
+        // Si mon objet a un shield, sa défense est égale à sa dextérité + la protection que fournit le shield
+        return $this->dexterity + $this->shield->getProtection();
     }
 
     /**
@@ -42,17 +86,14 @@ class Fighter
         $this->image = $image;
     }
 
-
-
     public function fight(Fighter $adversary): void
     {
-        $damage = rand(1, $this->getStrength()) - $adversary->getDexterity();
+        $damage = rand(1, $this->getDamage()) - $adversary->getDefense();
         if ($damage < 0) {
             $damage = 0;
         }
         $adversary->setLife($adversary->getLife() - $damage);
     }
-
 
     /**
      * Get the value of life

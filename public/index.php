@@ -1,12 +1,15 @@
 <?php
-
+require_once __DIR__ . "/../src/Weapon.php";
+require_once __DIR__ . "/../src/Shield.php";
 require '../src/Fighter.php';
 
 /** ✅ DEBUT DE LA ZONE À MODIFIER ✅ **/
+$heracles = new Fighter('Heracles', 20, 6, 'heracles.svg');
+$boar = new Fighter('Erymanthian Boar', 25, 12, 'boar.svg');
+$sword = new Weapon();
+$heracles->setWeapon($sword);
 
-
-$heracles = new Fighter('Heracles', 20, 6);
-$boar = new Fighter('Erymanthian Boar', 25, 12);
+$heracles->setShield(new Shield());
 
 /** FIN DE LA ZONE A MODIFIER **/
 /** ⛔ Ne pas modifier en dessous ⛔ **/
